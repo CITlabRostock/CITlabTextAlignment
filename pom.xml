@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>CITlabTextAlignment</name>
+
+    <groupId>de.uros.citlab</groupId>
+    <artifactId>textalignment</artifactId>
+    <version>1.0.0</version>
+
+    <parent>
+        <groupId>de.uros.citlab</groupId>
+        <artifactId>parent_pom</artifactId>
+        <version>1.2</version>
+    </parent>
+
+    <dependencies>
+        <!--CITLAB-->
+        <dependency>
+            <groupId>de.uros.citlab</groupId>
+            <artifactId>errorrate</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.uros.citlab</groupId>
+            <artifactId>confmat</artifactId>
+        </dependency>
+
+
+        <!--LOGGING-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!--TESTING-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
