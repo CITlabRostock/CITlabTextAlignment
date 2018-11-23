@@ -34,7 +34,7 @@ public class TextAlignerTest {
                 1.0
         );
 //        textAligner.setHp(new HyphenationProperty(6.0, null));
-        textAligner.setDebugOutput(1000, new File("out.png"));
+//        textAligner.setDebugOutput(1000, new File("out.png"));
         textAligner.setHp(null);
         textAligner.setThreshold(0.0);
         textAligner.setUpdateScheme(PathCalculatorGraph.UpdateScheme.ALL);
@@ -56,7 +56,7 @@ public class TextAlignerTest {
                 5.0
         );
 //        textAligner.setHp(new HyphenationProperty(6.0, null));
-        textAligner.setDebugOutput(1000, new File("out.png"));
+//        textAligner.setDebugOutput(1000, new File("out.png"));
         textAligner.setHp(null);
         textAligner.setThreshold(0.0);
         offsetBP = 1.0;
