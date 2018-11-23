@@ -95,11 +95,7 @@ public class BestPathPart {
         for (int i = 0; i < elements.size(); i++) {
             PathCalculatorGraph.IDistance<ConfMatVector, NormalizedCharacter> element = elements.get(i);
             for (NormalizedCharacter reference : element.getReferences()) {
-                if (CharMap.Return != reference.orig) {
-                    sb.append(reference.orig);
-                } else {
-                    LOG.warn("in reference is still the character '{}' - delete this character.", CharMap.Return);
-                }
+                sb.append(reference.orig);
             }
             ConfMatVector[] recos = element.getRecos();
             if (recos.length != 1) {

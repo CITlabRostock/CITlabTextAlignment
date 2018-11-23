@@ -2,19 +2,11 @@ package de.uros.citlab.textalignment;
 
 import de.uros.citlab.confmat.CharMap;
 import de.uros.citlab.confmat.ConfMat;
-import de.uros.citlab.errorrate.normalizer.StringNormalizerDft;
 import de.uros.citlab.errorrate.types.PathCalculatorGraph;
 import de.uros.citlab.textalignment.types.LineMatch;
-import de.uros.citlab.tokenizer.TokenizerCategorizer;
-import de.uros.citlab.tokenizer.categorizer.CategorizerWordMergeGroups;
-import eu.transkribus.interfaces.IStringNormalizer;
-import eu.transkribus.interfaces.ITokenizer;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.xml.soap.Text;
-import java.io.File;
-import java.text.Normalizer;
 import java.util.*;
 
 public class TextAlignerTest {

@@ -4,7 +4,10 @@ import de.uros.citlab.errorrate.types.PathCalculatorGraph;
 import de.uros.citlab.textalignment.types.ConfMatVector;
 import de.uros.citlab.textalignment.types.NormalizedCharacter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class CostCalculatorJumpConfMat implements PathCalculatorGraph.ICostCalculatorMulti<ConfMatVector, NormalizedCharacter> {
 
@@ -39,7 +42,7 @@ public class CostCalculatorJumpConfMat implements PathCalculatorGraph.ICostCalcu
         this.sizeRef = refs.length;
         isReturnPoints = new boolean[sizeReco];
         isSkipPoint = new boolean[sizeRef];
-        returnPoints=new LinkedHashSet<>();
+        returnPoints = new LinkedHashSet<>();
         for (int j = 1; j < refs.length; j++) {
             isSkipPoint[j] = isSkipPointSoft(refs[j]);
         }

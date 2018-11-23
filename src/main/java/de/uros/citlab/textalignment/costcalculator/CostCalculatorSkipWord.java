@@ -6,9 +6,6 @@ import de.uros.citlab.textalignment.types.NormalizedCharacter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public class CostCalculatorSkipWord extends CostCalculatorAbstract {
     private static Logger LOG = LoggerFactory.getLogger(CostCalculatorSkipWord.class);
     private boolean[] isSkipPoint;

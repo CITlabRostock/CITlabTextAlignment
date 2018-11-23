@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.*;
-import java.util.List;
 
 /**
  * @author gundram
@@ -128,13 +127,14 @@ public class TextAligner {
             throw new RuntimeException("apply setRecognition(..) first");
         }
         int indexNaC = charMap.get(CharMap.NaC);
-        int indexReturn = charMap.get(CharMap.Return);
+        char returnSymbol = cmc.getReturnSymbol();
+        int indexReturn = charMap.get(returnSymbol);
         NormalizedCharacter ncNaC = new NormalizedCharacter(CharMap.NaC, new char[]{CharMap.NaC}, new int[]{indexNaC}, false, NormalizedCharacter.Type.Dft, false);
         NormalizedCharacter ncNaCIsHyphen = new NormalizedCharacter(CharMap.NaC, new char[]{CharMap.NaC}, new int[]{indexNaC}, true, NormalizedCharacter.Type.Dft, false);
         NormalizedCharacter ncLineBreak = new NormalizedCharacter('\n', new char[]{'\n'}, new int[]{indexReturn}, false, NormalizedCharacter.Type.Return, false);
-        NormalizedCharacter ncRet = hp != null ? new NormalizedCharacter(CharMap.Return, new char[]{CharMap.Return}, new int[]{indexReturn}, true, hp.hypCosts, false) : null;
-        NormalizedCharacter prefix = hp != null ? new NormalizedCharacter('¬', hp.prefixes, getIndexes(charMap, hp.prefixes), true, NormalizedCharacter.Type.Dft, hp.skipPrefix) : null;
-        NormalizedCharacter suffix = hp != null ? new NormalizedCharacter('¬', hp.suffixes, getIndexes(charMap, hp.suffixes), true, NormalizedCharacter.Type.Dft, hp.skipSuffix) : null;
+        NormalizedCharacter ncRet = hp != null ? new NormalizedCharacter(returnSymbol, new char[]{returnSymbol}, new int[]{indexReturn}, true, hp.hypCosts, false) : null;
+        NormalizedCharacter prefix = hp != null ? new NormalizedCharacter(hp.prefixes != null && hp.prefixes.length > 0 ? hp.prefixes[0] : '¬', hp.prefixes, getIndexes(charMap, hp.prefixes), true, NormalizedCharacter.Type.Dft, hp.skipPrefix) : null;
+        NormalizedCharacter suffix = hp != null ? new NormalizedCharacter(hp.suffixes != null && hp.suffixes.length > 0 ? hp.suffixes[0] : '¬', hp.suffixes, getIndexes(charMap, hp.suffixes), true, NormalizedCharacter.Type.Dft, hp.skipSuffix) : null;
         refs = new LinkedList<>();
         refs.add(ncLineBreak);//first sign in ConfMatCollection will be a return - so it will match the linebreak
         for (String line : references) {
@@ -260,7 +260,12 @@ public class TextAligner {
                 new GroupUtil.Mapper<PathCalculatorGraph.IDistance<ConfMatVector, NormalizedCharacter>, BestPathPart>() {
                     @Override
                     public BestPathPart map(List<PathCalculatorGraph.IDistance<ConfMatVector, NormalizedCharacter>> elements) {
-                        return BestPathPart.newInstance(elements);
+                        BestPathPart bestPathPart = BestPathPart.newInstance(elements);
+                        if (bestPathPart.reference.indexOf(cmc.getReturnSymbol()) >= 0) {
+                            LOG.warn("in reference '{}' is still the character '{}' - delete this character.", bestPathPart.reference, cmc.getReturnSymbol());
+                            bestPathPart.reference = bestPathPart.reference.replace("" + cmc.getReturnSymbol(), "");
+                        }
+                        return bestPathPart;
                     }
                 });
         HashMap<ConfMat, LineMatch> refMap = new LinkedHashMap<>();
@@ -284,7 +289,6 @@ public class TextAligner {
 
     private void setRecognition(List<ConfMat> confMats) {
         cmc = ConfMatCollection.newInstance(
-                CharMap.Return,
                 1.0,
                 confMats,
                 nacOffset);

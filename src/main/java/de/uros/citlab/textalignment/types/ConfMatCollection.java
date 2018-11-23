@@ -8,7 +8,6 @@ package de.uros.citlab.textalignment.types;
 
 import de.uros.citlab.confmat.CharMap;
 import de.uros.citlab.confmat.ConfMat;
-import org.apache.commons.math3.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,54 +15,44 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Concatenate a list of ConfMats into one long ConfMat with a new channel for
- * newlines.
- * <p>
- * Since 22.06.2015
- *
- * @author tobias
+ * @author gundram
  */
 public class ConfMatCollection extends ConfMat {
 
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LoggerFactory.getLogger(ConfMatCollection.class);
     private final CharMap charMapOrig;
-    private double confNac;
-    private double confRet;
     private final double retProb;
     private int[] indicesStart;
     private final int numOfCM;
-    private final char returnSymb;
     private final double offsetNaC;
     private List<ConfMat> confMats;
-
-//    public ConfMatCollection(double retProb, List<ConfMat> cmList, boolean appendFinalRet) {
-//        this(retProb, cmList, appendFinalRet, 0.0);
-//    }
-//
-//    public ConfMatCollection(double retProb, List<ConfMat> cmList, boolean appendFinalRet, double offsetNaC) {
-//        this(CharMap.Return, retProb, cmList, appendFinalRet, offsetNaC);
-//    }
+    private final char returnSymbol;
 
     private ConfMatCollection(CharMap charMap, double[][] matrix, CharMap charMapOrig, int[] indicesStart, List<ConfMat> confMats, double retProb, int numOfCM, char returnSymb, double offsetNaC) {
         super(charMap, matrix);
         this.charMapOrig = charMapOrig;
         this.retProb = retProb;
         this.numOfCM = numOfCM;
-        this.returnSymb = returnSymb;
         this.offsetNaC = offsetNaC;
         this.confMats = confMats;
         this.indicesStart = indicesStart;
+        this.returnSymbol = returnSymb;
     }
 
-    public static ConfMatCollection newInstance(char retChar, double retProb, List<ConfMat> cmList, double offsetNaC) {
+    public char getReturnSymbol() {
+        return returnSymbol;
+    }
+
+    public static ConfMatCollection newInstance(double retProb, List<ConfMat> cmList, double offsetNaC) {
         if (cmList.isEmpty()) {
             throw new RuntimeException("empty ConfMat list");
         }
         int cmPos = 0;
+        final char retChar = CharMap.Return;
         CharMap charMapOrig = cmList.get(0).getCharMap();
         if (charMapOrig.containsChar(retChar)) {
-            throw new IllegalArgumentException("symbol '" + retChar + "' already in charMap - please choose other retChar.");
+            throw new IllegalArgumentException("Charmap contains symbol '" + retChar + "'. This case is not implemented yet.");
         }
         for (ConfMat cm : cmList) {
             if (cm.getLength() == 0) {
