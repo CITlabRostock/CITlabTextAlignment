@@ -139,5 +139,5 @@ would only allow the hyphenations ``"hy-" "phen"`` and ``"hy¬" "phen"``.
 Note that these ``HypenationPattern`` can __fail for special words__,
 so that they have to be used with caution.
 
-## LICENCE
-see [LICENCE](LICENCE) and [NOTICE.md](https://github.com/CITlabRostock/CITlabLicensedBoM/blob/master/NOTICE.md)
+## LICENSE
+see [LICENSE](LICENSE) and [NOTICE.md](https://github.com/CITlabRostock/CITlabLicensedBoM/blob/master/NOTICE.md)
