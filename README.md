@@ -97,47 +97,69 @@ The default is ``threshold = 0.0``.
 - __hyphenation__
 In some cases the transcription contains text without hyphenations,
 whereas they occur "in" the ConfMats. It is possible to define the hyphenation propery
-```
-public HyphenationProperty(
+  ```
+  public HyphenationProperty(
     boolean skipSuffix,
     boolean skipPrefix,
     char[] prefixes,
     char[] suffixes,
     double hypCosts
     )
-```
-In general one can specify characters that were used as hyphenation signs (see ``prefixes`` and ``suffixes``).
-In addition it is possible to make their occurance optional (see ``skipSuffix`` and ``skipPrefix``).
-To do not allow the algorithm to see hyphenations in too many places,
-extra costs for a hyphenation can be added.
-With ``hypCosts = 0`` there will be no extra costs, whereas ``hypCosts = Double.POSITIVE_INFINITY`` would permit any hyphenation.
-A good value is ``hypCosts = 6.0``.
- __Examples:__
+  ```
+  In general one can specify characters that were used as hyphenation signs (see ``prefixes`` and ``suffixes``).
+  In addition it is possible to make their occurance optional (see ``skipSuffix`` and ``skipPrefix``).
+  To do not allow the algorithm to see hyphenations in too many places,
+  extra costs for a hyphenation can be added.
+  With ``hypCosts = 0`` there will be no extra costs, whereas ``hypCosts = Double.POSITIVE_INFINITY`` would permit any hyphenation.
+  A good value is ``hypCosts = 6.0``.
+  __Examples:__
  
-With the hyphenation property
-```
-new HyphenationProperty(false, false, null, new char[]{'-', '¬'}, 6.0)
-```
- the ground truth ``hyphen``
-can be interpreted as ``"h-" "yphen"``, ``"h¬" "yphen"``, ``"hy-" "phen"``, ``"hy¬" "phen"``, ... , ``"hyphe-" "n"`` or ``"hyphe¬" "n"``.
+  With the hyphenation property
+  ```
+  new HyphenationProperty(false, false, null, new char[]{'-', '¬'}, 6.0)
+  ```
+  the ground truth ``hyphen``
+  can be interpreted as ``"h-" "yphen"``, ``"h¬" "yphen"``, ``"hy-" "phen"``, ``"hy¬" "phen"``, ... , ``"hyphe-" "n"`` or ``"hyphe¬" "n"``.
  
-With the hyphenation property
-```
-new HyphenationProperty(false, true, new char[]{'='}, new char[]{'='}, 6.0)
-```
-the ground truth ``hyphen``
- can be interpreted as ``"h=" "yphen"``, ``"h=" "=yphen"``, ``"hy=" "phen"``, ``"hy=" "=phen"``, ... , ``"hyphe=" "n"`` or ``"hyphe=" "=n"``.   
+  With the hyphenation property
+  ```
+  new HyphenationProperty(false, true, new char[]{'='}, new char[]{'='}, 6.0)
+  ```
+  the ground truth ``hyphen``
+  can be interpreted as ``"h=" "yphen"``, ``"h=" "=yphen"``, ``"hy=" "phen"``, ``"hy=" "=phen"``, ... , ``"hyphe=" "n"`` or ``"hyphe=" "=n"``.   
 
-In fact hyphenations are not allowed between all characters (like ``"h-" "yphen"``).
-Therefore, a language patttern can be provided
-so that hyphenations are restricted to language-specific properties.
-So
-```
-new HyphenationProperty(false, false, null, new char[]{'-', '¬'}, 6.0, Hyphenator.HyphenationPattern.EN_US)
-```
-would only allow the hyphenations ``"hy-" "phen"`` and ``"hy¬" "phen"``.
-Note that these ``HypenationPattern`` can __fail for special words__,
-so that they have to be used with caution.
-
+  In fact hyphenations are not allowed between all characters (like ``"h-" "yphen"``).
+  Therefore, a language patttern can be provided
+  so that hyphenations are restricted to language-specific properties.
+  So
+  ```
+  new HyphenationProperty(false, false, null, new char[]{'-', '¬'}, 6.0, Hyphenator.HyphenationPattern.EN_US)
+  ```
+  would only allow the hyphenations ``"hy-" "phen"`` and ``"hy¬" "phen"``.
+  Note that these ``HypenationPattern`` can __fail for special words__,
+  so that they have to be used with caution.
+- __debug output__
+  The alignment problem is solved by finding a shortest path through a graph.
+  The graph can be embedded into the 2d-space:
+  the concatenated ConfMats are placed along the y-dimension,
+  the concatenated transcripts are placed along the x-dimension.
+  The algorithm searchs the shortest (or cost-minimal) path
+  through the alignment from top-left to bottom-right.
+  This 2d-space can be plotted by setting
+  ```
+  public void setDebugOutput(int size, File file)
+  ```  
+  with the desired size of the image (e. g.``size = 1000``)
+  and the desired location to save the image after finishing the process.
+  It is recommended to use png, because there is no data compressing.
+- __update scheme__
+  Solving the alignment problem the algorithm stops, when he found the best solution.
+  by setting
+  ```
+  textAligner.setUpdateScheme(PathCalculatorGraph.UpdateScheme.ALL);
+  ```
+  it is possible to also calculate paths, that cannot lead to the best solution.
+  This __only makes sense__ if one is intereste in the debug output image,
+  because calculating more paths costs more time and the result stays the same. 
 ## LICENSE
 see [LICENSE](LICENSE) and [NOTICE.md](https://github.com/CITlabRostock/CITlabLicensedBoM/blob/master/NOTICE.md)
