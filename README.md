@@ -53,7 +53,7 @@ requires a lot of parameters which will be breefly explained.
 The algorithm requires a String with characters which can be interpreted als line break.
 In most cases, the space character ``\u+0020`` is used,
 but also the character tabulation ``\u+0009`` could make sense.
-In case that boch characters should be used set
+In case that both characters should be used set
 ``String lineBreakCharacters = "\u0009\u0020"``.
 Note that setting ``String lineBreakCharacters = ""`` is also possible,
 if only whole lines of the reference should be mapped to the ConfMats.
@@ -84,7 +84,7 @@ If ``Double costJumpConfMat = null`` the algorithm is not allowed to change the 
 For ``Double costJumpConfMat = 0`` the algorithm can chose an arbitrary reading order.
 Note that the complexity of the algorithm singnificantly increases when ``Double costJumpConfMat != null``
 and the alignment result is only a heuristic.
-Especially if the alignement task contains many short lines and ConfMats,
+Especially if the alignment task contains many short lines and ConfMats,
 the algorithm can fail.
 If a value ``> 0`` is used the algorithm is penalized if it breaks the original reading order of the ConfMats.
 A good value is  ``Double costJumpConfMat = 6.0``.
@@ -119,14 +119,14 @@ With the hyphenation property
 new HyphenationProperty(false, false, null, new char[]{'-', '¬'}, 6.0)
 ```
  the ground truth ``hyphen``
-can be interpretet as ``"h-" "yphen"``, ``"h¬" "yphen"``, ``"hy-" "phen"``, ``"hy¬" "phen"``, ... , ``"hyphe-" "n"`` or ``"hyphe¬" "n"``.
+can be interpreted as ``"h-" "yphen"``, ``"h¬" "yphen"``, ``"hy-" "phen"``, ``"hy¬" "phen"``, ... , ``"hyphe-" "n"`` or ``"hyphe¬" "n"``.
  
 With the hyphenation property
 ```
 new HyphenationProperty(false, true, new char[]{'='}, new char[]{'='}, 6.0)
 ```
 the ground truth ``hyphen``
- can be interpretet as ``"h=" "yphen"``, ``"h=" "=yphen"``, ``"hy=" "phen"``, ``"hy=" "=phen"``, ... , ``"hyphe=" "n"`` or ``"hyphe=" "=n"``.   
+ can be interpreted as ``"h=" "yphen"``, ``"h=" "=yphen"``, ``"hy=" "phen"``, ``"hy=" "=phen"``, ... , ``"hyphe=" "n"`` or ``"hyphe=" "=n"``.   
 
 In fact hyphenations are not allowed between all characters (like ``"h-" "yphen"``).
 Therefore, a language patttern can be provided
