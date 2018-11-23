@@ -70,15 +70,4 @@ public class HyphenationProperty {
         this.prefixes = prefixes;
         this.suffixes = suffixes;
     }
-
-    public static void main(String[] args) {
-        Double.POSITIVE_INFINITY
-        new HyphenationProperty(false, false, null, new char[]{'-', '¬'}, 6.0, Hyphenator.HyphenationPattern.EN_US);
-        Hyphenator h = Hyphenator.getInstance(Hyphenator.HyphenationPattern.EN_GB);
-        List<String> hyphen = h.hyphenate("hyphen");
-        for(String gh : hyphen){
-            System.out.println(gh);
-        }
-    }
-
 }
