@@ -1,7 +1,7 @@
 # CITlabTextAlignment
 A tool that aligns text/ground truth to a given list of ConfMats
 
-[![Build Status](http://dbis-halvar.uibk.ac.at/jenkins/buildStatus/icon?job=CITlabErrorRate)](http://dbis-halvar.uibk.ac.at/jenkins/job/CITlabTextAlignment)
+[![Build Status](http://dbis-halvar.uibk.ac.at/jenkins/buildStatus/icon?job=CITlabTextAlignment)](http://dbis-halvar.uibk.ac.at/jenkins/job/CITlabTextAlignment)
 
 ## Requirements
 - Java >= version 8
