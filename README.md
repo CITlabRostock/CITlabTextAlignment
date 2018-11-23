@@ -140,4 +140,4 @@ Note that these ``HypenationPattern`` can __fail for special words__,
 so that they have to be used with caution.
 
 ## LICENCE
-see [LICENCE]("LICENCE") and [NOTICE.md](https://github.com/CITlabRostock/CITlabLicensedBoM/blob/master/NOTICE.md)
+see [LICENCE](LICENCE) and [NOTICE.md](https://github.com/CITlabRostock/CITlabLicensedBoM/blob/master/NOTICE.md)
