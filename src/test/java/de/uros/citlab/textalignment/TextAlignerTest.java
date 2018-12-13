@@ -7,6 +7,7 @@ import de.uros.citlab.textalignment.types.LineMatch;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.*;
 
 public class TextAlignerTest {
@@ -17,18 +18,97 @@ public class TextAlignerTest {
     private double offsetBP = 10.0;
     private static Random r = new Random(1234);
 
+
+    @Test
+    public void testFilterJumpConfMat() {
+        variance = 1.0;
+        offsetBP = 1.0;
+        r.setSeed(1234);
+        TextAligner textAligner = new TextAligner(
+                " ",
+                4.0,
+                0.2,
+                0.0,
+                0.0
+        );
+//        textAligner.setDebugOutput(1000, new File("out.png"));
+        //either first or third component have to be null
+        testCase(textAligner,
+                Arrays.asList("eins", "zwei", "eins", "drei")
+                , Arrays.asList("eins", "zwei", "eins", "drei"),
+                Arrays.asList(null, "zwei", "eins", "drei"));
+
+        textAligner = new TextAligner(
+                " ",
+                4.0,
+                0.2,
+                2.0,
+                0.0
+        );
+        testCase(textAligner,
+                Arrays.asList("eins", "zwei", "eins", "drei")
+                , Arrays.asList("eins", "zwei", "eins", "drei"),
+                Arrays.asList("eins", "zwei", "eins", "drei"));
+        textAligner = new TextAligner(
+                " ",
+                4.0,
+                0.2,
+                null,
+                0.0
+        );
+        textAligner.setDebugOutput(1000, new File("out.png"),false);
+        testCase(textAligner,
+                Arrays.asList("eins", "zwei", "eins", "drei")
+                , Arrays.asList("eins", "zwei", "eins", "drei"),
+                Arrays.asList("eins", "zwei", "eins", "drei"));
+
+    }
+
+    @Test
+    public void testFilterOffset() {
+        variance = 0.6;
+        offsetBP = 1.0;
+        r.setSeed(1234);
+        TextAligner textAligner = new TextAligner(
+                " ",
+                4.0,
+                0.2,
+                null,
+                0.0
+        );
+        textAligner.setFilterOffset(0.0);
+        textAligner.setDebugOutput(1000, new File("out.png"),false);
+        //bestpath is not right
+        testCase(textAligner,
+                Arrays.asList("eins", "zwei", "eins", "drei")
+                , Arrays.asList("eins", "zwei", "eins", "drei"),
+                Arrays.asList(null, null, null, null));
+        textAligner.setFilterOffset(3.0);
+        testCase(textAligner,
+                Arrays.asList("eins", "zwei", "eins", "drei"),
+                Arrays.asList("eins", "zwei", "eins", "drei"),
+                Arrays.asList("eins", "zwei", "eins", "drei")
+        );
+//        textAligner.setMaxVertexCount(10000000);
+        testCase(textAligner,
+                Arrays.asList("eins", "zwei", "eins", "drei"),
+                Arrays.asList("eins", "zwei", "eins", "drei"),
+                Arrays.asList("eins", "zwei", "eins", "drei")
+        );
+    }
+
     @Test
     public void testToyExamples() {
         TextAligner textAligner = new TextAligner(
                 " ",
                 4.0,
                 0.2,
-                1.0
+                1.0,
+                0.0
         );
 //        textAligner.setHp(new HyphenationProperty(6.0, null));
 //        textAligner.setDebugOutput(1000, new File("out.png"));
         textAligner.setHp(null);
-        textAligner.setThreshold(0.0);
         textAligner.setUpdateScheme(PathCalculatorGraph.UpdateScheme.ALL);
         testCase(textAligner, Arrays.asList("line 1", "line 2"), Arrays.asList("line 1", "line 2"), Arrays.asList("line 1", "line 2"));
         testCase(textAligner, Arrays.asList("line 1", "line 2"), Arrays.asList("line 1 line 2"), Arrays.asList("line 1", "line 2"));
@@ -41,19 +121,19 @@ public class TextAlignerTest {
 
     @Test
     public void getLargeSzenario() {
+        offsetBP = 1.0;
+        variance = 0.2;
         TextAligner textAligner = new TextAligner(
                 " ",
                 4.0,
                 0.2,
-                5.0
+                5.0,
+                0.0
         );
 //        textAligner.setHp(new HyphenationProperty(6.0, null));
 //        textAligner.setDebugOutput(1000, new File("out.png"));
         textAligner.setHp(null);
-        textAligner.setThreshold(0.0);
-        offsetBP = 1.0;
-        variance = 0.05;
-        textAligner.setUpdateScheme(PathCalculatorGraph.UpdateScheme.ALL);
+//        textAligner.setUpdateScheme(PathCalculatorGraph.UpdateScheme.ALL);
         testCase(textAligner,
                 Arrays.asList("in normal cases the szenario has",
                         "the alignment problem is not that easy",
@@ -81,22 +161,23 @@ public class TextAlignerTest {
         );
         testCase(textAligner,
                 Arrays.asList("in normal cases the szenario has",
-                        "a much longer context, so that",
                         "time to get a real szenario. In addition we have to",
+                        "a much longer context, so that",
                         "enter some more distotions like wrong words, missing",
                         "for the method. We have to copy these part some more",
                         "words, reading order errors, and - of course hypenations!")
                 ,
                 Arrays.asList("in normal cases the szenario has",
-                        "the alignment problem is not that easy",
+                        "the alignment problem is not that easy",//is not part of the ConfMat - have to be ignored => not in references
                         "a much longer context, so that",
-                        "time to get a real szenario. In addition we have to",
+                        /*                        "enter some more distotions like wrong words, missing",*/ //this reference were delete - so cannot be found by Engine ==> null
+                        "time to get a real szenario. In addition we have to", //different order - hact to be moved up to position 2 (like ConfMat
                         "for the method. We have to copy these part some more",
                         "words, reading order errors, and - of course hypenations!")
                 ,
                 Arrays.asList("in normal cases the szenario has",
-                        "a much longer context, so that",
                         "time to get a real szenario. In addition we have to",
+                        "a much longer context, so that",
                         null,
                         "for the method. We have to copy these part some more",
                         "words, reading order errors, and - of course hypenations!")
@@ -136,6 +217,12 @@ public class TextAlignerTest {
             confMatsList.add(generateConfMat(getCharMapAlphaNum(), cm, r));
         }
         List<LineMatch> alignmentResult = textAligner.getAlignmentResult(references, confMatsList);
+        if (alignmentResult == null) {
+            alignmentResult = new LinkedList<>();
+            for (int i = 0; i < target.size(); i++) {
+                alignmentResult.add(null);
+            }
+        }
         List<String> res = new LinkedList<>();
         for (int i = 0; i < alignmentResult.size(); i++) {
             LineMatch lineMatch = alignmentResult.get(i);

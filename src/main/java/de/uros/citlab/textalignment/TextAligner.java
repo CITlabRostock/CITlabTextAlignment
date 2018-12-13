@@ -40,13 +40,17 @@ public class TextAligner {
     HyphenationProperty hp = null;
     ConfMatCollection cmc = null;
     private double threshold = 0.01;
-//    private boolean useHyphens;
-//    private Character[] hyphen_suffix;
-//    private Character[] hyphen_prefix;
 
-//    public void setMaxPathes(int maxAnz, Mode mode) {
-//        impl.setFilter(maxAnz > 0 ? new PathFilterDefault(maxAnz, mode) : null);
-//    }
+    public void setFilterOffset(double offset) {
+        if (costJumpConfMat != null) {
+            if (offset < 0.0) {
+                return;
+            } else {
+                throw new RuntimeException("setMaxPathes together with jumpConfmat not implemented");
+            }
+        }
+        impl.setFilter(offset < 0 ? null : new FilterOffset(offset));
+    }
 
 //    public void setMaxPathes(double offset, Mode mode) {
 //        impl.setFilter(offset > 0 ? new PathFilterOffsetDefault(offset, mode) : null);
@@ -73,6 +77,7 @@ public class TextAligner {
         impl.addCostCalculator(new CostCalculatorContinue());
         if (costJumpConfMat != null) {
             impl.addCostCalculator(new CostCalculatorJumpConfMat(costJumpConfMat));
+            impl.setFilter(new FilterJumpConfMat());
         }
         if (costSkipWords != null) {
             impl.addCostCalculator(new CostCalculatorSkipWord(costSkipWords));
@@ -109,6 +114,11 @@ public class TextAligner {
 
     public void setMaxVertexCount(int maxVertexCount) {
         this.maxVertexCount = maxVertexCount;
+    }
+
+    public TextAligner(String lineBreakCharacters, Double costSkipWords, Double costSkipConfMat, Double costJumpConfMat, double threshold) {
+        this(lineBreakCharacters, costSkipWords, costSkipConfMat, costJumpConfMat);
+        setThreshold(threshold);
     }
 
     public TextAligner(String lineBreakCharacters, Double costSkipWords, Double costSkipConfMat, Double costJumpConfMat) {
@@ -172,18 +182,6 @@ public class TextAligner {
             refs.add(ncNaC);
             refs.add(ncLineBreak);//last sign in ConfMatCollection will be a return - so it will match the linebreak
         }
-//        for (int i = 2; i < refs.size(); i++) {
-//            NormalizedCharacter first = refs.get(i - 2);
-//            NormalizedCharacter second = refs.get(i - 1);
-//            NormalizedCharacter third = refs.get(i);
-////            if (first.isNaC == second.isNaC) {
-////                throw new RuntimeException("two nacs after each other");
-////            }
-////            if (first.isNaC != third.isNaC) {
-////                throw new RuntimeException("two different things 2 position away");
-////            }
-//
-//        }
     }
 
     private static int[] getIndexes(CharMap cm, char[] chars) {
@@ -208,16 +206,16 @@ public class TextAligner {
         return res1;
     }
 
-    public void setDebugOutput(int size, File file) {
+    public void setDebugOutput(int size, File file, boolean showImage) {
         impl.setSizeProcessViewer(size);
         impl.setFileDynMat(file);
+        impl.setShowDynMat(showImage);
     }
 
     public List<LineMatch> getAlignmentResult(List<String> refs, List<ConfMat> recos) {
         setRecognition(recos);
         setReference(refs);
         List<PathCalculatorGraph.IDistance<ConfMatVector, NormalizedCharacter>> bestPath = impl.calcBestPath(this.recos, this.refs);
-
         if (bestPath == null) {
             return null;
         }
@@ -245,7 +243,7 @@ public class TextAligner {
                         if (recos == null || recos.length == 0) {
                             return false;
                         }
-                        int returnIndex = charMap.get(CharMap.Return);
+                        int returnIndex = charMap.get(cmc.getReturnSymbol());
                         for (ConfMatVector cmVec : recos) {
                             if (cmVec.maxIndex == returnIndex) {
                                 if (recos.length != 1) {
@@ -274,7 +272,8 @@ public class TextAligner {
             double conf = cmp.getConf();
             if (conf > threshold) {
                 //found match!
-                if (refMap.containsKey(cmOld) && refMap.get(cmOld).getConfidence() < conf) {
+                if (refMap.containsKey(cmOld) && refMap.get(cmOld).getConfidence() > conf) {
+                    //but already better match found for ConfMat! Ignore this match.
                     continue;
                 }
                 refMap.put(cmOld, new LineMatch(cmOld, cmp.reference, conf));
@@ -301,14 +300,6 @@ public class TextAligner {
             double[] recoVec = recoVecs[i];
             recos.add(new ConfMatVector(recoVec, charMap, lbChars));
         }
-    }
-
-    private static boolean isSkipPointSoft(NormalizedCharacter nc) {
-        return nc.type != NormalizedCharacter.Type.Dft;
-    }
-
-    private static boolean isSkipPointHard(NormalizedCharacter nc) {
-        return isSkipPointSoft(nc) && nc.type != NormalizedCharacter.Type.HypenLineBreak;
     }
 
 }

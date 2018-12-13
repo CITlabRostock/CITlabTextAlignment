@@ -62,6 +62,9 @@ public class CostCalculatorSkipConfMat extends CostCalculatorAbstract {
     public PathCalculatorGraph.DistanceSmall getNeighbourSmall(int[] point, PathCalculatorGraph.DistanceSmall distanceSmall) {
         final int refIdx = point[1];
         final int recoIdx = point[0];
+        if(!isReturnPoint[recoIdx] ){
+            return null;
+        }
         //actual character is skip-character. Do something!
         for (Integer returnPoint : returnPoints) {
             if (returnPoint <= recoIdx) {
