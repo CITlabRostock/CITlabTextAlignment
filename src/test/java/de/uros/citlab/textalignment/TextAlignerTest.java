@@ -106,8 +106,8 @@ public class TextAlignerTest {
                 1.0,
                 0.0
         );
-//        textAligner.setHp(new HyphenationProperty(6.0, null));
-//        textAligner.setDebugOutput(1000, new File("out.png"));
+        textAligner.setHp(new HyphenationProperty(6.0, null));
+        textAligner.setDebugOutput(1000, new File("out.png"));
         textAligner.setHp(null);
         textAligner.setUpdateScheme(PathCalculatorGraph.UpdateScheme.ALL);
         testCase(textAligner, Arrays.asList("line 1", "line 2"), Arrays.asList("line 1", "line 2"), Arrays.asList("line 1", "line 2"));
