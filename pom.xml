@@ -8,12 +8,12 @@
 
     <groupId>de.uros.citlab</groupId>
     <artifactId>textalignment</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <parent>
         <groupId>de.uros.citlab</groupId>
         <artifactId>parent_pom</artifactId>
-        <version>1.2</version>
+        <version>1.5</version>
     </parent>
 
     <dependencies>
