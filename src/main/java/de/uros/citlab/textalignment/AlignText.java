@@ -90,7 +90,7 @@ public class AlignText {
     }
 
     long endTime = System.currentTimeMillis();
-    System.out.println("That took " + (endTime - startTime) + " milliseconds");
+    System.out.println("Alignment took " + (endTime - startTime) + " milliseconds");
 
   }
 
