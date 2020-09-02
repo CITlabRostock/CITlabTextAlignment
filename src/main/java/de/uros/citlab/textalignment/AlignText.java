@@ -28,8 +28,8 @@ public class AlignText {
     Scanner s1;
     Scanner s2;
     ArrayList<String> references = new ArrayList<String>();
-    ArrayList<String> predictions = new ArrayList<String>();
-    
+    ArrayList<String> recos = new ArrayList<String>();
+
     try {
       s1 = new Scanner(new File(args[0]));
 
@@ -44,21 +44,20 @@ public class AlignText {
     try {
       s2 = new Scanner(new File(args[1]));
       while (s2.hasNextLine()) {
-        predictions.add(s2.nextLine());
+        recos.add(s2.nextLine());
       }
       s2.close();
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
 
-
     CharMap cm = getCharMap(args[2]);
 
-    List<ConfMat> predictionConfMatsList = new ArrayList<>();
-    for (String pred : predictions) {
-      predictionConfMatsList.add(generateConfMat(cm, pred, r));
+    List<ConfMat> recoConfMatsList = new ArrayList<>();
+    for (String reco : recos) {
+      recoConfMatsList.add(generateConfMat(cm, reco, r));
     }
-    List<LineMatch> alignmentResult = textAligner.getAlignmentResult(references, predictionConfMatsList);
+    List<LineMatch> alignmentResult = textAligner.getAlignmentResult(references, recoConfMatsList);
 
     List<String> res = new LinkedList<>();
     for (int i = 0; i < alignmentResult.size(); i++) {
@@ -81,17 +80,12 @@ public class AlignText {
         LineMatch match = alignmentResult.get(i);
         String reference = match.getReference();
         double confidence = match.getConfidence();
-        System.out.printf("line: %d prediction: %s reference: %s confidence: %s\n", i, predictions.get(i), reference,
+        System.out.printf("line: %d prediction: %s reference: %s confidence: %s\n", i, recos.get(i), reference,
             confidence);
       } catch (NullPointerException e) {
         // ignore this line
       }
-
     }
-
-    long endTime = System.currentTimeMillis();
-    System.out.println("Alignment took " + (endTime - startTime) + " milliseconds");
-
   }
 
   public static CharMap getCharMap(String chars) {
@@ -100,6 +94,8 @@ public class AlignText {
       res.add(chars.charAt(i));
     }
     res.add(' ');
+    res.add("'");
+    res.add("\"");
     return res;
   }
 
@@ -113,7 +109,7 @@ public class AlignText {
     char last = CharMap.NaC;
     for (int i = 0; i < reference.length(); i++) {
       char cur = reference.charAt(i);
-      
+
       if (cm.get(cur) == null) {
         throw new RuntimeException("character '" + cur + "' is not in CharMap");
       }
