@@ -15,7 +15,7 @@
 	<groupId>de.uros.citlab</groupId>
 	<relativePath>../CITlabParentPom/pom.xml</relativePath>
         <artifactId>parent_pom</artifactId>
-        <version>1.5</version>
+        <version>1.6</version>
     </parent>
     
     <build>
