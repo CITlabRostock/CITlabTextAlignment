@@ -13,7 +13,7 @@
 
     <parent>
 	<groupId>de.uros.citlab</groupId>
-	<relativePath>../parent_pom/pom.xml</relativePath>
+	<relativePath>../CITlabParentPom/pom.xml</relativePath>
         <artifactId>parent_pom</artifactId>
         <version>1.5</version>
     </parent>
