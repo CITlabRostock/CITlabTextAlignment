@@ -94,6 +94,7 @@ public class AlignText {
       res.add(chars.charAt(i));
     }
     res.add(' ');
+    res.add("\t");
     res.add("'");
     res.add("\"");
     return res;
